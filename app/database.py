@@ -16,8 +16,8 @@ if os.getenv("VERCEL_ENV"):
     # Parse and modify the connection URL to force IPv4
     # Example: postgresql://user:pass@db.xxx.supabase.co:5432/postgres
     if "supabase" in DATABASE_URL:
-        # Add required parameters for Supabase
-        DATABASE_URL = f"{DATABASE_URL}?sslmode=require&host_rewrite=true"
+        # Add SSL mode for Supabase
+        DATABASE_URL = f"{DATABASE_URL}?sslmode=require"
     
     SQLALCHEMY_DATABASE_URL = DATABASE_URL
 else:
@@ -30,7 +30,8 @@ if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     connect_args["check_same_thread"] = False
 elif "supabase" in SQLALCHEMY_DATABASE_URL:
     connect_args.update({
-        "connect_timeout": 60,  # 60 seconds timeout
+        "connect_timeout": 30,  # 30 seconds timeout
+        "application_name": "physical-hyperlinks"  # Helps identify connections in Supabase dashboard
     })
 
 # Create engine with optimized settings for serverless
