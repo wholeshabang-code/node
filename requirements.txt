@@ -6,7 +6,6 @@ jinja2==3.1.2
 aiofiles==23.2.1
 qrcode==7.4.2
 pillow==10.1.0
-python-jose==3.3.0
 pydantic==2.4.2
-psycopg2==2.9.9
 python-dotenv==1.0.0
+sqlalchemy-cockroachdb==2.0.1

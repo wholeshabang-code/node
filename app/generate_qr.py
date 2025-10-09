@@ -8,13 +8,18 @@ import os
 
 load_dotenv()
 
+def get_base_url():
+    if os.getenv("VERCEL_ENV"):
+        return f"https://{os.getenv('VERCEL_URL')}"
+    return os.getenv("BASE_URL", "http://localhost:3000")
+
 def generate_qr_codes(n: int, base_url: str = None) -> List[str]:
     """
     Generate n QR codes with unique UUIDs
     
     Args:
         n: Number of QR codes to generate
-        base_url: Base URL for the QR codes (optional, will use BASE_URL from env if not provided)
+        base_url: Base URL for the QR codes (optional, will use environment-based URL if not provided)
         
     Returns:
         List of generated UUIDs
