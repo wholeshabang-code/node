@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Attach Content to QR Note</h1>
+
+<form action="/note/{{ uuid }}" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Content Type:</label>
+        <select name="content_type" id="content_type" onchange="showContentInput()">
+            <option value="url">URL</option>
+            <option value="text">Text Note</option>
+            <option value="image">Image</option>
+        </select>
+    </div>
+
+    <div id="url-input" class="form-group">
+        <label for="url-content">Enter URL:</label>
+        <input type="url" id="url-content" name="url_content" placeholder="https://example.com">
+    </div>
+
+    <div id="text-input" class="form-group" style="display: none;">
+        <label for="text-content">Enter Text:</label>
+        <textarea id="text-content" name="text_content" rows="4" placeholder="Type your note here..."></textarea>
+    </div>
+
+    <div id="image-input" class="form-group" style="display: none;">
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" name="image" accept="image/*">
+    </div>
+
+    <input type="hidden" id="content" name="content" value="">
+    <button type="submit">Attach Content</button>
+</form>
+
+<script>
+function showContentInput() {
+    const contentType = document.getElementById('content_type').value;
+    const contentField = document.getElementById('content');
+    
+    // Hide all input types
+    document.getElementById('url-input').style.display = 'none';
+    document.getElementById('text-input').style.display = 'none';
+    document.getElementById('image-input').style.display = 'none';
+    
+    // Show selected input type and set up content field update
+    if (contentType === 'url') {
+        document.getElementById('url-input').style.display = 'block';
+        document.getElementById('url-content').addEventListener('input', function(e) {
+            contentField.value = e.target.value;
+        });
+    } else if (contentType === 'text') {
+        document.getElementById('text-input').style.display = 'block';
+        document.getElementById('text-content').addEventListener('input', function(e) {
+            contentField.value = e.target.value;
+        });
+    } else if (contentType === 'image') {
+        document.getElementById('image-input').style.display = 'block';
+        contentField.value = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Set up initial content value for URL (since it's the default selected type)
+    const urlInput = document.getElementById('url-content');
+    const contentField = document.getElementById('content');
+    urlInput.addEventListener('input', function(e) {
+        contentField.value = e.target.value;
+    });
+    
+    // Handle form submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const contentType = document.getElementById('content_type').value;
+        const contentField = document.getElementById('content');
+        
+        if (contentType === 'url') {
+            contentField.value = document.getElementById('url-content').value;
+        } else if (contentType === 'text') {
+            contentField.value = document.getElementById('text-content').value;
+        }
+        // For image type, we don't need to set content as it's handled by the server
+    });
+});
+</script>
+{% endblock %}

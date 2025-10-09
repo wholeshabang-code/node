@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content">
+    {% if content_type == "image" %}
+        <img src="{{ note.content }}" alt="Attached image">
+    {% else %}
+        <div class="text-content">
+            {{ note.content }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
