@@ -34,10 +34,21 @@ async def save_file_to_storage(file: UploadFile, uuid: str) -> str:
         )
         
         # Get public URL
-        public_url = supabase.storage.from_(bucket_name).get_public_url(file_name)
-        logger.info(f"File uploaded successfully: {public_url}")
-        
-        return public_url
+        try:
+            public_url = supabase.storage.from_(bucket_name).get_public_url(file_name)
+            # Format URL correctly if needed
+            if not public_url.startswith("http"):
+                supabase_url = os.getenv("SUPABASE_URL", "").rstrip("/")
+                public_url = f"{supabase_url}/storage/v1/object/public/{bucket_name}/{file_name}"
+            logger.info(f"File uploaded successfully: {public_url}")
+            return public_url
+        except Exception as url_error:
+            logger.error(f"Error getting public URL: {url_error}")
+            # Fallback URL construction
+            supabase_url = os.getenv("SUPABASE_URL", "").rstrip("/")
+            public_url = f"{supabase_url}/storage/v1/object/public/{bucket_name}/{file_name}"
+            logger.info(f"Using fallback URL: {public_url}")
+            return public_url
     
     except Exception as e:
         logger.error(f"Error uploading file: {e}", exc_info=True)
