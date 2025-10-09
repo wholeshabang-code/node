@@ -9,9 +9,14 @@ import os
 load_dotenv()
 
 def get_base_url():
-    if os.getenv("VERCEL_ENV"):
-        return f"https://{os.getenv('VERCEL_URL')}"
-    return os.getenv("BASE_URL", "http://localhost:3000")
+    # If VERCEL_URL is set, use it regardless of VERCEL_ENV
+    if os.getenv("VERCEL_URL"):
+        # Make sure to include https://
+        vercel_url = os.getenv("VERCEL_URL")
+        if not vercel_url.startswith(("http://", "https://")):
+            vercel_url = f"https://{vercel_url}"
+        return vercel_url
+    return os.getenv("BASE_URL", "http://localhost:8000")
 
 def generate_qr_codes(n: int, base_url: str = None) -> List[str]:
     """
@@ -29,8 +34,8 @@ def generate_qr_codes(n: int, base_url: str = None) -> List[str]:
     if not os.path.exists(qr_dir):
         os.makedirs(qr_dir)
     
-    if base_url is None:
-        base_url = os.getenv("BASE_URL", "http://localhost:8000")
+    # Hardcoded Vercel URL
+    base_url = "https://node-blond-chi.vercel.app"
 
     generated_uuids = []
     

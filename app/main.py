@@ -17,6 +17,21 @@ if not os.getenv("VERCEL_ENV"):
 
 app = FastAPI()
 
+# Enable debug logging
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+# Add error handler for 500 errors
+@app.exception_handler(Exception)
+async def internal_error(request: Request, exc: Exception):
+    logger.error(f"Internal Server Error: {exc}", exc_info=True)
+    return templates.TemplateResponse(
+        "error.html",
+        {"request": request, "error": str(exc)},
+        status_code=500
+    )
+
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -25,27 +40,41 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/note/{uuid}", response_class=HTMLResponse)
 async def get_note(request: Request, uuid: str, db: Session = Depends(get_db)):
-    note = db.query(models.Note).filter(models.Note.uuid == uuid).first()
-    
-    if not note:
-        # Show attach content page if note doesn't exist
-        return templates.TemplateResponse(
-            "attach.html",
-            {"request": request, "uuid": uuid}
-        )
-    
-    if note.content_type == "url":
-        return RedirectResponse(url=note.content)
-    elif note.content_type == "image":
-        return templates.TemplateResponse(
-            "view.html",
-            {"request": request, "note": note, "content_type": "image"}
-        )
-    else:  # text
-        return templates.TemplateResponse(
-            "view.html",
-            {"request": request, "note": note, "content_type": "text"}
-        )
+    try:
+        logger.debug(f"Accessing note with UUID: {uuid}")
+        
+        # Test database connection
+        try:
+            note = db.query(models.Note).filter(models.Note.uuid == uuid).first()
+            logger.debug(f"Database query successful. Note found: {note is not None}")
+        except Exception as e:
+            logger.error(f"Database error: {e}", exc_info=True)
+            raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+        
+        if not note:
+            logger.debug(f"No note found for UUID {uuid}, showing attach form")
+            return templates.TemplateResponse(
+                "attach.html",
+                {"request": request, "uuid": uuid}
+            )
+        
+        logger.debug(f"Note found, type: {note.content_type}, content: {note.content[:100]}...")
+        
+        if note.content_type == "url":
+            return RedirectResponse(url=note.content)
+        elif note.content_type == "image":
+            return templates.TemplateResponse(
+                "view.html",
+                {"request": request, "note": note, "content_type": "image"}
+            )
+        else:  # text
+            return templates.TemplateResponse(
+                "view.html",
+                {"request": request, "note": note, "content_type": "text"}
+            )
+    except Exception as e:
+        logger.error(f"Error processing note {uuid}: {e}", exc_info=True)
+        raise
 
 @app.post("/note/{uuid}")
 async def create_note(
