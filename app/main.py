@@ -90,11 +90,9 @@ async def create_note(
             raise HTTPException(status_code=400, detail="Invalid content type")
         
         if content_type == "image" and image:
-            # Save the uploaded image
-            file_path = f"static/images/{uuid}{os.path.splitext(image.filename)[1]}"
-            with open(file_path, "wb") as buffer:
-                shutil.copyfileobj(image.file, buffer)
-            content = f"/static/images/{uuid}{os.path.splitext(image.filename)[1]}"
+            # Upload image to Supabase Storage
+            from .storage import save_file_to_storage
+            content = await save_file_to_storage(image, uuid)
         elif not content and content_type != "image":
             raise HTTPException(status_code=400, detail="Content is required")
         
