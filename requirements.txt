@@ -8,4 +8,4 @@ qrcode==7.4.2
 pillow==10.1.0
 pydantic==2.4.2
 python-dotenv==1.0.0
-sqlalchemy-cockroachdb==2.0.1
+psycopg2-binary==2.9.9
