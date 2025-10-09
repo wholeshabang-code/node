@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="error-container">
+    <h1>⚠️ Something went wrong</h1>
+    {% if error %}
+    <div class="error-details">
+        <p>Error: {{ error }}</p>
+    </div>
+    {% endif %}
+    <div class="actions">
+        <a href="javascript:history.back()" class="button">Go Back</a>
+    </div>
+</div>
+
+<style>
+    .error-container {
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .error-details {
+        margin: 2rem 0;
+        padding: 1rem;
+        background-color: #fff3f3;
+        border-radius: 8px;
+        text-align: left;
+    }
+    
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007AFF;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    
+    .button:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
