@@ -39,8 +39,7 @@ engine = create_engine(
     connect_args=connect_args,
     pool_pre_ping=True,  # Enable connection health checks
     pool_size=1,  # Minimize connections for serverless
-    max_overflow=0,  # Disable overflow connections
-    pool_pre_ping=True  # Verify connection before using
+    max_overflow=0  # Disable overflow connections
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
