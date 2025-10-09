@@ -9,8 +9,11 @@ from typing import Optional
 
 from . import models, schemas
 from .database import engine, get_db
+import os
 
-models.Base.metadata.create_all(bind=engine)
+# Only create tables in development
+if not os.getenv("VERCEL_ENV"):
+    models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

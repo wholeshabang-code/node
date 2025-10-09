@@ -13,21 +13,33 @@ if os.getenv("VERCEL_ENV"):
     if not DATABASE_URL:
         raise ValueError("DATABASE_URL environment variable is required in production")
     
-    # Supabase requires SSL
-    SQLALCHEMY_DATABASE_URL = f"{DATABASE_URL}?sslmode=require"
+    # Parse and modify the connection URL to force IPv4
+    # Example: postgresql://user:pass@db.xxx.supabase.co:5432/postgres
+    if "supabase" in DATABASE_URL:
+        # Add required parameters for Supabase
+        DATABASE_URL = f"{DATABASE_URL}?sslmode=require&host_rewrite=true"
+    
+    SQLALCHEMY_DATABASE_URL = DATABASE_URL
 else:
     # Local development using SQLite
     SQLALCHEMY_DATABASE_URL = "sqlite:///./physical_hyperlinks.db"
 
-# Only use check_same_thread=False for SQLite
-connect_args = {"check_same_thread": False} if SQLALCHEMY_DATABASE_URL.startswith("sqlite") else {}
+# Connection arguments
+connect_args = {}
+if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
+    connect_args["check_same_thread"] = False
+elif "supabase" in SQLALCHEMY_DATABASE_URL:
+    connect_args.update({
+        "connect_timeout": 60,  # 60 seconds timeout
+    })
 
-# Create engine with connection pooling for Supabase
+# Create engine with optimized settings for serverless
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args=connect_args,
-    pool_size=5,
-    max_overflow=10,
+    pool_pre_ping=True,  # Enable connection health checks
+    pool_size=1,  # Minimize connections for serverless
+    max_overflow=0,  # Disable overflow connections
     pool_pre_ping=True  # Verify connection before using
 )
 
