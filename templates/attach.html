@@ -1,48 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Attach Content to QR Note</h1>
+<div class="container">
+    <h1 class="title">Add Content</h1>
 
-<form action="/note/{{ uuid }}" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label>Content Type:</label>
-        <select name="content_type" id="content_type" onchange="showContentInput()">
-            <option value="url">URL</option>
-            <option value="text">Text Note</option>
-            <option value="image">Image</option>
-        </select>
-    </div>
+    <form action="/note/{{ uuid }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <select name="content_type" id="content_type" onchange="showContentInput()" class="btn">
+                <option value="url">URL Link</option>
+                <option value="text">Text Note</option>
+                <option value="image">Image Upload</option>
+            </select>
+        </div>
 
-    <div id="url-input" class="form-group">
-        <label for="url-content">Enter URL:</label>
-        <input type="url" id="url-content" name="url_content" placeholder="https://example.com">
-    </div>
+        <div id="url-input" class="form-group">
+            <input type="url" id="url-content" name="url_content" placeholder="Enter URL" class="modern-input">
+        </div>
 
-    <div id="text-input" class="form-group" style="display: none;">
-        <label for="text-content">Enter Text:</label>
-        <textarea id="text-content" name="text_content" rows="4" placeholder="Type your note here..."></textarea>
-    </div>
+        <div id="text-input" class="form-group" style="display: none;">
+            <textarea id="text-content" name="text_content" rows="4" placeholder="Type your note here..." class="modern-input"></textarea>
+        </div>
 
-    <div id="image-input" class="form-group" style="display: none;">
-        <label for="image">Upload Image:</label>
-        <input type="file" id="image" name="image" accept="image/*">
-    </div>
+        <div id="image-input" class="form-group" style="display: none;">
+            <label for="image" class="file-upload-btn">
+                Choose Image
+                <input type="file" id="image" name="image" accept="image/*" style="display: none;">
+            </label>
+            <div id="file-name" class="file-name"></div>
+        </div>
 
     <input type="hidden" id="content" name="content" value="">
-    <button type="submit">Attach Content</button>
+    <button type="submit" class="btn">Attach Content</button>
 </form>
 
 <script>
+// Show file name when a file is selected
+document.getElementById('image').addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name || 'No file selected';
+    document.getElementById('file-name').textContent = fileName;
+});
+
 function showContentInput() {
     const contentType = document.getElementById('content_type').value;
     const contentField = document.getElementById('content');
     
-    // Hide all input types
+    // Hide all input types with fade effect
     document.getElementById('url-input').style.display = 'none';
     document.getElementById('text-input').style.display = 'none';
     document.getElementById('image-input').style.display = 'none';
     
-    // Show selected input type and set up content field update
+    // Show selected input type with fade effect
     if (contentType === 'url') {
         document.getElementById('url-input').style.display = 'block';
         document.getElementById('url-content').addEventListener('input', function(e) {
