@@ -17,16 +17,14 @@ logger = logging.getLogger(__name__)
 
 # Initialize FastAPI with increased file size limit (15MB)
 app = FastAPI()
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
-    max_request_size=15 * 1024 * 1024  # 15MB in bytes
+    allow_headers=["*"]
 )
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 # Add error handler for 413 Payload Too Large
 @app.exception_handler(413)
