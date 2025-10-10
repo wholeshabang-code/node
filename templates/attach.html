@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+{% call components.glass_container() %}
     <img src="/static/logo.png" alt="Node Logo" class="logo">
     <h1 class="title">node</h1>
 
+    {% call components.glass_form() %}
     <form action="/note/{{ uuid }}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <select name="content_type" id="content_type" onchange="showContentInput()" class="btn">

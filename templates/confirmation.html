@@ -1,22 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="success-message">
-    <h1>✅ Content Saved Successfully!</h1>
-    <p>Your content has been successfully attached to the QR code.</p>
-    <p>To view the content, simply scan the QR code again.</p>
-    
-    <div class="content-preview">
-        <h2>Content Type: {{ content_type }}</h2>
-        {% if content_type == "url" %}
-            <p>Linked URL: <a href="{{ content }}">{{ content }}</a></p>
-        {% elif content_type == "text" %}
-            <p>Text Note: {{ content }}</p>
-        {% elif content_type == "image" %}
-            <p>Image has been uploaded successfully</p>
-        {% endif %}
+{% call components.glass_container() %}
+    <div class="success-message">
+        <h1>✅ Content Saved Successfully!</h1>
+        <p>Your content has been successfully attached to the QR code.</p>
+        <p>To view the content, simply scan the QR code again.</p>
+        
+        {% call components.glass_card() %}
+            <div class="content-preview">
+                <h2>Content Type: {{ content_type }}</h2>
+                {% if content_type == "url" %}
+                    <p>Linked URL: <a href="{{ content }}">{{ content }}</a></p>
+                {% elif content_type == "text" %}
+                    <p>Text Note: {{ content }}</p>
+                {% elif content_type == "image" %}
+                    <p>Image has been uploaded successfully</p>
+                {% endif %}
+            </div>
+        {% endcall %}
     </div>
-</div>
+{% endcall %}
 
 <style>
     .success-message {

@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="content">
-    {% if content_type == "image" %}
-        <img src="{{ note.content }}" alt="Attached image">
-    {% else %}
-        <div class="text-content">
-            {{ note.content }}
-        </div>
-    {% endif %}
-</div>
+{% call components.glass_container() %}
+    <div class="content">
+        {% if content_type == "image" %}
+            {% call components.glass_panel() %}
+                <img src="{{ note.content }}" alt="Attached image">
+            {% endcall %}
+        {% else %}
+            {% call components.glass_card() %}
+                <div class="text-content">
+                    {{ note.content }}
+                </div>
+            {% endcall %}
+        {% endif %}
+    </div>
+{% endcall %}
 {% endblock %}

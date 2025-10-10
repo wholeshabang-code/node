@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, Request, UploadFile, File, 
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import shutil
 from typing import Optional
@@ -14,12 +15,27 @@ from .supabase_client import get_supabase
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+# Initialize FastAPI with increased file size limit (15MB)
 app = FastAPI()
-
-# Enable debug logging
-import logging
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    max_request_size=15 * 1024 * 1024  # 15MB in bytes
+)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+# Add error handler for 413 Payload Too Large
+@app.exception_handler(413)
+async def request_entity_too_large(request: Request, exc: Exception):
+    return templates.TemplateResponse(
+        "error.html",
+        {"request": request, "error": "File size too large. Maximum size is 15MB."},
+        status_code=413
+    )
 
 # Add error handler for 500 errors
 @app.exception_handler(Exception)

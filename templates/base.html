@@ -1,3 +1,4 @@
+{% import 'macros.html' as components %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +15,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff;
+            background: linear-gradient(135deg, #ef5aa3 0%, #a264d6 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,12 +23,52 @@
             padding: 20px;
         }
 
+        /* Glassmorphic Styles */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border-radius: 20px;
+            padding: 40px 20px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.25);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .glass-form {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 24px 0 rgba(31, 38, 135, 0.3);
+            border-radius: 18px;
+            padding: 25px;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.2);
+            border-radius: 14px;
+            padding: 15px;
+        }
+
         .container {
             text-align: center;
-            background: #fff;
-            padding: 40px 20px;
-            border-radius: 20px;
-            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 320px;
         }

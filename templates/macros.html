@@ -1,0 +1,23 @@
+{% macro glass_container(class="") -%}
+<div class="glass-container {{ class }}">
+  {{ caller() }}
+</div>
+{%- endmacro %}
+
+{% macro glass_card(class="") -%}
+<div class="glass-card {{ class }}">
+  {{ caller() }}
+</div>
+{%- endmacro %}
+
+{% macro glass_panel(class="") -%}
+<div class="glass-panel {{ class }}">
+  {{ caller() }}
+</div>
+{%- endmacro %}
+
+{% macro glass_form(class="") -%}
+<div class="glass-form {{ class }}">
+  {{ caller() }}
+</div>
+{%- endmacro %}
