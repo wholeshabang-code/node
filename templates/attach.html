@@ -40,7 +40,27 @@
 document.getElementById('image').addEventListener('change', function(e) {
     const fileName = e.target.files[0]?.name || 'No file selected';
     document.getElementById('file-name').textContent = fileName;
+    validateContent();
 });
+
+function validateContent() {
+    const contentType = document.getElementById('content_type').value;
+    const submitButton = document.querySelector('button[type="submit"]');
+    
+    let isValid = false;
+    
+    if (contentType === 'url') {
+        const urlValue = document.getElementById('url-content').value.trim();
+        isValid = urlValue !== '' && urlValue.startsWith('http');
+    } else if (contentType === 'text') {
+        isValid = document.getElementById('text-content').value.trim() !== '';
+    } else if (contentType === 'image') {
+        isValid = document.getElementById('image').files.length > 0;
+    }
+    
+    submitButton.disabled = !isValid;
+    return isValid;
+}
 
 function showContentInput() {
     const contentType = document.getElementById('content_type').value;
@@ -51,21 +71,32 @@ function showContentInput() {
     document.getElementById('text-input').style.display = 'none';
     document.getElementById('image-input').style.display = 'none';
     
+    // Remove existing event listeners
+    const urlContent = document.getElementById('url-content');
+    const textContent = document.getElementById('text-content');
+    const newUrlContent = urlContent.cloneNode(true);
+    const newTextContent = textContent.cloneNode(true);
+    urlContent.parentNode.replaceChild(newUrlContent, urlContent);
+    textContent.parentNode.replaceChild(newTextContent, textContent);
+    
     // Show selected input type with fade effect
     if (contentType === 'url') {
         document.getElementById('url-input').style.display = 'block';
-        document.getElementById('url-content').addEventListener('input', function(e) {
+        newUrlContent.addEventListener('input', function(e) {
             contentField.value = e.target.value;
+            validateContent();
         });
     } else if (contentType === 'text') {
         document.getElementById('text-input').style.display = 'block';
-        document.getElementById('text-content').addEventListener('input', function(e) {
+        newTextContent.addEventListener('input', function(e) {
             contentField.value = e.target.value;
+            validateContent();
         });
     } else if (contentType === 'image') {
         document.getElementById('image-input').style.display = 'block';
         contentField.value = '';
     }
+    validateContent();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
