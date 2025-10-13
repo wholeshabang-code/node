@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentField = document.getElementById('content');
     urlInput.addEventListener('input', function(e) {
         contentField.value = e.target.value;
+        validateContent();
     });
     
     // Handle form submission
