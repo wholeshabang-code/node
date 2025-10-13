@@ -132,10 +132,11 @@
             }
             
             .btn:disabled::after {
-                content: '(Add content first)';
+                content: attr(data-helper-text);
                 display: block;
                 font-size: 12px;
                 margin-top: 4px;
+                white-space: pre-line;
             }
         }
 

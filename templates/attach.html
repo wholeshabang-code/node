@@ -43,22 +43,42 @@ document.getElementById('image').addEventListener('change', function(e) {
     validateContent();
 });
 
+function isValidUrl(string) {
+    try {
+        const url = new URL(string);
+        return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch (_) {
+        return false;
+    }
+}
+
 function validateContent() {
     const contentType = document.getElementById('content_type').value;
     const submitButton = document.querySelector('button[type="submit"]');
     
     let isValid = false;
+    let helperText = 'Add content first';
     
     if (contentType === 'url') {
         const urlValue = document.getElementById('url-content').value.trim();
-        isValid = urlValue !== '' && urlValue.startsWith('http');
+        isValid = urlValue !== '' && isValidUrl(urlValue);
+        if (!isValid && urlValue !== '') {
+            helperText = 'Please enter a complete URL\n(e.g., https://youtu.be/...)';
+        }
     } else if (contentType === 'text') {
         isValid = document.getElementById('text-content').value.trim() !== '';
+        if (!isValid) {
+            helperText = 'Add some text first';
+        }
     } else if (contentType === 'image') {
         isValid = document.getElementById('image').files.length > 0;
+        if (!isValid) {
+            helperText = 'Choose an image first';
+        }
     }
     
     submitButton.disabled = !isValid;
+    submitButton.setAttribute('data-helper-text', helperText);
     return isValid;
 }
 
