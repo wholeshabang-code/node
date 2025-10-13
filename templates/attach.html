@@ -91,41 +91,45 @@ function showContentInput() {
     document.getElementById('text-input').style.display = 'none';
     document.getElementById('image-input').style.display = 'none';
     
-    // Remove existing event listeners
-    const urlContent = document.getElementById('url-content');
-    const textContent = document.getElementById('text-content');
-    const newUrlContent = urlContent.cloneNode(true);
-    const newTextContent = textContent.cloneNode(true);
-    urlContent.parentNode.replaceChild(newUrlContent, urlContent);
-    textContent.parentNode.replaceChild(newTextContent, textContent);
-    
     // Show selected input type with fade effect
     if (contentType === 'url') {
         document.getElementById('url-input').style.display = 'block';
-        newUrlContent.addEventListener('input', function(e) {
-            contentField.value = e.target.value;
-            validateContent();
-        });
     } else if (contentType === 'text') {
         document.getElementById('text-input').style.display = 'block';
-        newTextContent.addEventListener('input', function(e) {
-            contentField.value = e.target.value;
-            validateContent();
-        });
     } else if (contentType === 'image') {
         document.getElementById('image-input').style.display = 'block';
         contentField.value = '';
     }
+    
+    // Make sure listeners are properly set up
+    setupInputListeners();
+    // Validate the current content
     validateContent();
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Set up initial content value for URL (since it's the default selected type)
-    const urlInput = document.getElementById('url-content');
+function setupInputListeners() {
     const contentField = document.getElementById('content');
+    const urlInput = document.getElementById('url-content');
+    const textInput = document.getElementById('text-content');
+
+    // Set up URL input listener
     urlInput.addEventListener('input', function(e) {
         contentField.value = e.target.value;
+        validateContent();
     });
+
+    // Set up text input listener
+    textInput.addEventListener('input', function(e) {
+        contentField.value = e.target.value;
+        validateContent();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupInputListeners();
+    
+    // Run initial validation
+    validateContent();
     
     // Handle form submission
     document.querySelector('form').addEventListener('submit', function(e) {
