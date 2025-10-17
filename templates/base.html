@@ -132,11 +132,10 @@
             }
             
             .btn:disabled::after {
-                content: attr(data-helper-text);
+                content: '(Add content first)';
                 display: block;
                 font-size: 12px;
                 margin-top: 4px;
-                white-space: pre-line;
             }
         }
 
@@ -219,6 +218,61 @@
             padding: 20px;
             border-radius: 12px;
             margin-top: 20px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .text-edit {
+            margin-top: 20px;
+        }
+
+        .edit-textarea {
+            min-height: 120px;
+            width: 100%;
+            margin-bottom: 15px;
+            font-family: inherit;
+            resize: vertical;
+            white-space: pre-wrap;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-edit {
+            margin-top: 15px;
+            background-color: #6c757d;
+            font-size: 14px;
+            padding: 8px 16px;
+            width: auto;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+            font-size: 14px;
+            padding: 8px 16px;
+            width: auto;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            font-size: 14px;
+            padding: 8px 16px;
+            width: auto;
+        }
+
+        .btn-edit:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
         }
 
         img {

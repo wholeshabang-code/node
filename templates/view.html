@@ -7,6 +7,24 @@
             {% call components.glass_panel() %}
                 <img src="{{ note.content }}" alt="Attached image">
             {% endcall %}
+        {% elif content_type == "text" %}
+            {% call components.glass_card() %}
+                <div id="text-display" class="text-content">
+                    {{ note.content }}
+                </div>
+                <div id="text-edit" class="text-edit" style="display: none;">
+                    <form action="/note/{{ note.uuid }}/text" method="POST" onsubmit="handleEditSubmit(event)">
+                        <textarea name="content" class="modern-input edit-textarea">{{ note.content }}</textarea>
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-save">Save Changes</button>
+                            <button type="button" class="btn btn-cancel" onclick="toggleEditMode()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                <button onclick="toggleEditMode()" id="edit-button" class="btn btn-edit">
+                    Edit Text
+                </button>
+            {% endcall %}
         {% else %}
             {% call components.glass_card() %}
                 <div class="text-content">
@@ -15,5 +33,43 @@
             {% endcall %}
         {% endif %}
     </div>
+</div>
+
+<script>
+function toggleEditMode() {
+    const displayEl = document.getElementById('text-display');
+    const editEl = document.getElementById('text-edit');
+    const editButton = document.getElementById('edit-button');
+    
+    if (displayEl.style.display !== 'none') {
+        displayEl.style.display = 'none';
+        editEl.style.display = 'block';
+        editButton.style.display = 'none';
+    } else {
+        displayEl.style.display = 'block';
+        editEl.style.display = 'none';
+        editButton.style.display = 'block';
+    }
+}
+
+function handleEditSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    
+    fetch(form.action, {
+        method: 'PUT',
+        body: formData
+    }).then(response => {
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            throw new Error('Failed to update text');
+        }
+    }).catch(error => {
+        alert('Failed to update text: ' + error.message);
+    });
+}
+</script>
 {% endcall %}
 {% endblock %}

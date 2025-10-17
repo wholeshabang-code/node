@@ -1,50 +1,144 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% call components.glass_container() %}
-    <div class="success-message">
-        <h1>✅ Content Saved Successfully!</h1>
-        <p>Your content has been successfully attached to the QR code.</p>
-        <p>To view the content, simply scan the QR code again.</p>
-        
-        {% call components.glass_card() %}
-            <div class="content-preview">
-                <h2>Content Type: {{ content_type }}</h2>
-                {% if content_type == "url" %}
-                    <p>Linked URL: <a href="{{ content }}">{{ content }}</a></p>
-                {% elif content_type == "text" %}
-                    <p>Text Note: {{ content }}</p>
-                {% elif content_type == "image" %}
-                    <p>Image has been uploaded successfully</p>
-                {% endif %}
-            </div>
-        {% endcall %}
+<div class="confirmation-container">
+    <div class="success-icon">
+        <div class="success-circle">
+            <svg class="checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20,6 9,17 4,12"></polyline>
+            </svg>
+        </div>
     </div>
-{% endcall %}
+    
+    <div class="confirmation-text">
+        <h1>Your content has been attached successfully.</h1>
+        <p>Thank you for using node!</p>
+    </div>
+    
+    <button class="continue-btn" onclick="redirectToContent()">
+        Continue
+    </button>
+</div>
 
 <style>
-    .success-message {
+    .confirmation-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
         text-align: center;
-        padding: 2rem;
     }
     
-    .success-message h1 {
-        color: #2ecc71;
-        margin-bottom: 1.5rem;
+    .success-icon {
+        margin-bottom: 2rem;
     }
     
-    .content-preview {
-        margin-top: 2rem;
-        padding: 1rem;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        text-align: left;
+    .success-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #ef5aa3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(239, 90, 163, 0.3);
     }
     
-    .content-preview h2 {
-        font-size: 1.2rem;
+    .checkmark {
+        width: 40px;
+        height: 40px;
+        color: white;
+    }
+    
+    .confirmation-text {
+        margin-bottom: 3rem;
+    }
+    
+    .confirmation-text h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+    
+    .confirmation-text p {
+        font-size: 16px;
         color: #666;
-        margin-bottom: 1rem;
+        margin: 0;
+    }
+    
+    .continue-btn {
+        background-color: #ef5aa3;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 16px 40px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(239, 90, 163, 0.3);
+        min-width: 140px;
+    }
+    
+    .continue-btn:hover {
+        background-color: #d94e8d;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(239, 90, 163, 0.4);
+    }
+    
+    .continue-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(239, 90, 163, 0.3);
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 480px) {
+        .confirmation-container {
+            padding: 15px;
+        }
+        
+        .success-circle {
+            width: 70px;
+            height: 70px;
+        }
+        
+        .checkmark {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .confirmation-text h1 {
+            font-size: 22px;
+        }
+        
+        .confirmation-text p {
+            font-size: 15px;
+        }
+        
+        .continue-btn {
+            padding: 14px 35px;
+            font-size: 15px;
+        }
     }
 </style>
+
+<script>
+function redirectToContent() {
+    // Get the current URL to extract the UUID
+    const currentPath = window.location.pathname;
+    const uuid = currentPath.split('/note/')[1];
+    
+    if (uuid) {
+        // Redirect to the note content
+        window.location.href = `/note/${uuid}`;
+    } else {
+        // Fallback - redirect to home or show error
+        console.error('Could not determine UUID for redirect');
+    }
+}
+</script>
 {% endblock %}
