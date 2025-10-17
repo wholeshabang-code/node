@@ -1,45 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, Request, UploadFile, File, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
-
-@app.put("/note/{uuid}/text")
-async def update_text_note(request: Request, uuid: str, content: str = Form(...)):
-    """Update the content of a text note. Only text content can be updated."""
-    try:
-        # Get the current note
-        supabase = get_supabase()
-        result = supabase.table("notes").select("*").eq("uuid", uuid).execute()
-        
-        if not result.data:
-            raise HTTPException(status_code=404, detail="Note not found")
-        
-        note = result.data[0]
-        if note["content_type"] != "text":
-            raise HTTPException(status_code=400, detail="Only text notes can be edited")
-        
-        # Update the note
-        result = supabase.table("notes").update({"content": content}).eq("uuid", uuid).execute()
-        
-        if not result.data:
-            raise HTTPException(status_code=500, detail="Failed to update note")
-            
-        return RedirectResponse(url=f"/note/{uuid}", status_code=303)
-        
-    except Exception as e:
-        logger.error(f"Error updating note: {str(e)}")
-        return templates.TemplateResponse(
-            "error.html",
-            {"request": request, "error": "Failed to update note"},
-            status_code=500
-        )
-
-@app.post("/note/{uuid}")
-async def create_note(
-    request: Request,
-    uuid: str,
-    content_type: str = Form(...),
-    content: str = Form(None),
-    image: UploadFile = File(None)
-):ponses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
@@ -83,37 +43,6 @@ async def internal_error(request: Request, exc: Exception):
         {"request": request, "error": "An internal error occurred"},
         status_code=500
     )
-
-@app.put("/note/{uuid}/text")
-async def update_text_note(request: Request, uuid: str, content: str = Form(...)):
-    """Update the content of a text note. Only text content can be updated."""
-    try:
-        # Get the current note
-        supabase = get_supabase()
-        result = supabase.table("notes").select("*").eq("uuid", uuid).execute()
-        
-        if not result.data:
-            raise HTTPException(status_code=404, detail="Note not found")
-        
-        note = result.data[0]
-        if note["content_type"] != "text":
-            raise HTTPException(status_code=400, detail="Only text notes can be edited")
-        
-        # Update the note
-        result = supabase.table("notes").update({"content": content}).eq("uuid", uuid).execute()
-        
-        if not result.data:
-            raise HTTPException(status_code=500, detail="Failed to update note")
-            
-        return RedirectResponse(url=f"/note/{uuid}", status_code=303)
-        
-    except Exception as e:
-        logger.error(f"Error updating note: {str(e)}")
-        return templates.TemplateResponse(
-            "error.html",
-            {"request": request, "error": "Failed to update note"},
-            status_code=500
-        )
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -203,12 +132,34 @@ async def create_note(
     except Exception as e:
         logger.error(f"Error creating note: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
-    
-    return templates.TemplateResponse(
-        "confirmation.html",
-        {
-            "request": request,
-            "content_type": note.content_type,
-            "content": note.content
-        }
-    )
+
+@app.put("/note/{uuid}/text")
+async def update_text_note(request: Request, uuid: str, content: str = Form(...)):
+    """Update the content of a text note. Only text content can be updated."""
+    try:
+        # Get the current note
+        supabase = get_supabase()
+        result = supabase.table("notes").select("*").eq("uuid", uuid).execute()
+        
+        if not result.data:
+            raise HTTPException(status_code=404, detail="Note not found")
+        
+        note = result.data[0]
+        if note["content_type"] != "text":
+            raise HTTPException(status_code=400, detail="Only text notes can be edited")
+        
+        # Update the note
+        result = supabase.table("notes").update({"content": content}).eq("uuid", uuid).execute()
+        
+        if not result.data:
+            raise HTTPException(status_code=500, detail="Failed to update note")
+            
+        return RedirectResponse(url=f"/note/{uuid}", status_code=303)
+        
+    except Exception as e:
+        logger.error(f"Error updating note: {str(e)}")
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "error": "Failed to update note"},
+            status_code=500
+        )
