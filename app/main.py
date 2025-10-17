@@ -50,6 +50,14 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Templates
 templates = Jinja2Templates(directory="templates")
 
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    """Homepage - redirect to a default note or show welcome page"""
+    import uuid
+    # Generate a new UUID for a fresh note
+    new_uuid = str(uuid.uuid4())
+    return RedirectResponse(url=f"/note/{new_uuid}", status_code=302)
+
 @app.get("/note/{uuid}", response_class=HTMLResponse)
 async def get_note(request: Request, uuid: str):
     try:
