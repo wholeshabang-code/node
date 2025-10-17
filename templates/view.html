@@ -8,23 +8,21 @@
                 <img src="{{ note.content }}" alt="Attached image">
             {% endcall %}
         {% elif content_type == "text" %}
-            {% call components.glass_card() %}
-                <div id="text-display" class="text-content text-display">
-                    {{ note.content }}
-                </div>
-                <div id="text-edit" class="text-edit" style="display: none;">
-                    <form action="/note/{{ note.uuid }}/text" method="POST" onsubmit="handleEditSubmit(event)">
-                        <textarea name="content" class="modern-input edit-textarea">{{ note.content }}</textarea>
-                        <div class="button-group">
-                            <button type="submit" class="btn btn-save">Save Changes</button>
-                            <button type="button" class="btn btn-cancel" onclick="toggleEditMode()">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-                <button onclick="toggleEditMode()" id="edit-button" class="btn btn-edit-small">
-                    Edit Text
-                </button>
-            {% endcall %}
+            <div id="text-display" class="text-content text-display">
+                {{ note.content }}
+            </div>
+            <div id="text-edit" class="text-edit" style="display: none;">
+                <form action="/note/{{ note.uuid }}/text" method="POST" onsubmit="handleEditSubmit(event)">
+                    <textarea name="content" class="modern-input edit-textarea">{{ note.content }}</textarea>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-save">Save Changes</button>
+                        <button type="button" class="btn btn-cancel" onclick="toggleEditMode()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <button onclick="toggleEditMode()" id="edit-button" class="btn btn-edit-small">
+                Edit Text
+            </button>
         {% else %}
             {% call components.glass_card() %}
                 <div class="text-content">
