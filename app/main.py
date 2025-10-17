@@ -162,7 +162,10 @@ async def update_text_note(request: Request, uuid: str, content: str = Form(...)
         if not result.data:
             raise HTTPException(status_code=500, detail="Failed to update note")
             
-        return RedirectResponse(url=f"/note/{uuid}", status_code=303)
+        return templates.TemplateResponse(
+            "text_confirmation.html",
+            {"request": request}
+        )
         
     except Exception as e:
         logger.error(f"Error updating note: {str(e)}")

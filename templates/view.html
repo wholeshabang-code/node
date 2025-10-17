@@ -9,7 +9,7 @@
             {% endcall %}
         {% elif content_type == "text" %}
             {% call components.glass_card() %}
-                <div id="text-display" class="text-content">
+                <div id="text-display" class="text-content text-display">
                     {{ note.content }}
                 </div>
                 <div id="text-edit" class="text-edit" style="display: none;">
@@ -21,7 +21,7 @@
                         </div>
                     </form>
                 </div>
-                <button onclick="toggleEditMode()" id="edit-button" class="btn btn-edit">
+                <button onclick="toggleEditMode()" id="edit-button" class="btn btn-edit-small">
                     Edit Text
                 </button>
             {% endcall %}
