@@ -9,7 +9,7 @@
             {% endcall %}
         {% elif content_type == "text" %}
             <div id="text-display" class="text-content text-display">
-                {{ note.content }}
+                {{ note.content|trim }}
             </div>
             <div id="text-edit" class="text-edit" style="display: none;">
                 <form action="/note/{{ note.uuid }}/text" method="POST" onsubmit="handleEditSubmit(event)">
